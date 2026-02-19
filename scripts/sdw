@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  ./scripts/sdw <command> [options]
+
+Commands:
+  install         First-time install
+  update          Apply runtime/image updates
+  reset           Recreate runtime state (with backup by default)
+  status          Show runtime diagnostic state
+EOF
+}
+
+main() {
+  local cmd="${1:-}"
+  shift || true
+
+  case "${cmd}" in
+    install)
+      "${SCRIPT_DIR}/install.sh" "$@"
+      ;;
+    update)
+      "${SCRIPT_DIR}/update.sh" "$@"
+      ;;
+    reset)
+      "${SCRIPT_DIR}/reset.sh" "$@"
+      ;;
+    status)
+      "${SCRIPT_DIR}/status.sh" "$@"
+      ;;
+    ""|-h|--help|help)
+      usage
+      ;;
+    *)
+      echo "Unknown command: ${cmd}" >&2
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

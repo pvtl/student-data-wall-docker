@@ -1,0 +1,13 @@
+services:
+  app:
+    image: ${APP_IMAGE:?APP_IMAGE must be set in .env.docker}
+    container_name: student-data-wall
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:80"
+    volumes:
+      - ./data/database:/var/www/html/database
+      - ./data/storage:/var/www/html/storage
+      - ./license/license.lic:/var/www/html/license.lic:ro
+    env_file:
+      - .env.docker

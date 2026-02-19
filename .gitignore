@@ -1,0 +1,4 @@
+.env.docker
+data/
+backups/
+license/*.lic

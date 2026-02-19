@@ -1,0 +1,49 @@
+name: Runtime Validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate scripts with shellcheck
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          shellcheck scripts/sdw scripts/*.sh scripts/lib/*.sh
+
+      - name: Validate docker compose
+        run: |
+          set -euo pipefail
+          cp .env.docker.example .env.docker
+          mkdir -p license
+          touch license/license.lic
+          APP_IMAGE=ghcr.io/pvtl/student-data-wall:v0.1.0 docker compose -f docker-compose.yml config >/dev/null
+
+      - name: Validate release consistency
+        run: |
+          set -euo pipefail
+          version="$(tr -d '[:space:]' < VERSION)"
+          image="$(awk -F= '$1=="APP_IMAGE"{print substr($0, index($0, "=")+1)}' .env.docker.example)"
+
+          if [[ "${image}" == *":latest"* ]]; then
+            echo "APP_IMAGE must not use latest."
+            exit 1
+          fi
+
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            if [[ "${GITHUB_REF_NAME}" != "${version}" ]]; then
+              echo "Tag ${GITHUB_REF_NAME} does not match VERSION ${version}."
+              exit 1
+            fi
+          fi
