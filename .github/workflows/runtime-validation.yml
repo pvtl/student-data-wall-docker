@@ -28,7 +28,7 @@ jobs:
           cp .env.docker.example .env.docker
           mkdir -p license
           touch license/license.lic
-          APP_IMAGE=ghcr.io/pvtl/student-data-wall:v0.1.0 docker compose -f docker-compose.yml config >/dev/null
+          APP_IMAGE=ghcr.io/pvtl/student-data-wall-docker:v0.1.0 docker compose -f docker-compose.yml config >/dev/null
 
       - name: Validate release consistency
         run: |

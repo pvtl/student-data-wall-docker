@@ -4,7 +4,7 @@
 
 - Docker Engine installed
 - Docker Compose v2 plugin installed (`docker compose`)
-- Access to pull `ghcr.io/pvtl/student-data-wall`
+- Access to pull `ghcr.io/pvtl/student-data-wall-docker`
 - Runtime files checked out from this repository
 
 ## Initial Installation
