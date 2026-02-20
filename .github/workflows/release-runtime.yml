@@ -7,15 +7,15 @@ on:
   workflow_dispatch:
     inputs:
       runtime_version:
-        description: Runtime release version (X.Y.Z, vX.Y.Z, or vX.Y.Z-suffix)
+        description: Runtime release version (vX.Y.Z or vX.Y.Z-suffix)
         required: true
         type: string
       app_image:
-        description: App image reference (tag or digest)
+        description: App image reference (eg. ghcr.io/pvtl/student-data-wall-docker:sha-abc1234)
         required: true
         type: string
       publish_release:
-        description: Publish tag/release (false builds artifact only)
+        description: Publish tag/release? (un-check to build artifact only)
         required: true
         default: true
         type: boolean
