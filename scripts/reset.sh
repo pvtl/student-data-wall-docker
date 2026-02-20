@@ -29,8 +29,11 @@ backup_data() {
   if [[ -d "${REPO_ROOT}/data/database" ]]; then
     cp -R "${REPO_ROOT}/data/database" "${backup_dir}/database"
   fi
-  if [[ -d "${REPO_ROOT}/data/storage" ]]; then
-    cp -R "${REPO_ROOT}/data/storage" "${backup_dir}/storage"
+  if [[ -d "${REPO_ROOT}/data/storage_private" ]]; then
+    cp -R "${REPO_ROOT}/data/storage_private" "${backup_dir}/storage_private"
+  fi
+  if [[ -d "${REPO_ROOT}/data/storage_public" ]]; then
+    cp -R "${REPO_ROOT}/data/storage_public" "${backup_dir}/storage_public"
   fi
 
   echo "Backup completed: ${backup_dir}"

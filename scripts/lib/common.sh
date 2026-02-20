@@ -98,7 +98,10 @@ normalize_app_image_tag() {
 }
 
 ensure_data_dirs() {
-  mkdir -p "${REPO_ROOT}/data/database" "${REPO_ROOT}/data/storage"
+  mkdir -p \
+    "${REPO_ROOT}/data/database" \
+    "${REPO_ROOT}/data/storage_private" \
+    "${REPO_ROOT}/data/storage_public"
   touch "${REPO_ROOT}/data/database/database.sqlite"
 }
 

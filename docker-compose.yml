@@ -6,8 +6,9 @@ services:
     ports:
       - "${APP_PORT:-8000}:80"
     volumes:
-      - ./data/database:/var/www/html/database
-      - ./data/storage:/var/www/html/storage
+      - ./data/database/database.sqlite:/var/www/html/database/database.sqlite
+      - ./data/storage_private:/var/www/html/storage/app/private
+      - ./data/storage_public:/var/www/html/storage/app/public
       - ./license/license.lic:/var/www/html/license.lic:ro
     env_file:
       - .env.docker
