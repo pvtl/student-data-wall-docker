@@ -67,19 +67,29 @@ jobs:
             exit 1
           fi
 
-          if [[ "${raw_image}" != ghcr.io/pvtl/student-data-wall-docker:* && "${raw_image}" != ghcr.io/pvtl/student-data-wall-docker@sha256:* ]]; then
+          if [[ "${raw_image}" =~ ^[[:space:]]*docker[[:space:]]+pull[[:space:]]+(.+)$ ]]; then
+            normalized_image="${BASH_REMATCH[1]}"
+          else
+            normalized_image="${raw_image}"
+          fi
+
+          # Trim any accidental leading/trailing whitespace from the image ref.
+          normalized_image="${normalized_image#"${normalized_image%%[![:space:]]*}"}"
+          normalized_image="${normalized_image%"${normalized_image##*[![:space:]]}"}"
+
+          if [[ "${normalized_image}" != ghcr.io/pvtl/student-data-wall-docker:* && "${normalized_image}" != ghcr.io/pvtl/student-data-wall-docker@sha256:* ]]; then
             echo "app_image must reference ghcr.io/pvtl/student-data-wall-docker with a tag or digest."
             exit 1
           fi
 
-          if [[ "${raw_image}" == *":latest" ]]; then
+          if [[ "${normalized_image}" == *":latest" ]]; then
             echo "app_image must not use latest."
             exit 1
           fi
 
           {
             echo "RUNTIME_VERSION=${normalized_version}"
-            echo "APP_IMAGE=${raw_image}"
+            echo "APP_IMAGE=${normalized_image}"
             echo "PUBLISH_RELEASE=${publish_release}"
             echo "TRIGGER_SOURCE=${trigger_source}"
           } >> "${GITHUB_ENV}"
