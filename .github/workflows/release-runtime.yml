@@ -125,6 +125,7 @@ jobs:
           cp docker-compose.yml "${RUNTIME_NAME}/"
           cp .env.docker.example "${RUNTIME_NAME}/"
           cp VERSION "${RUNTIME_NAME}/"
+          cp -r license "${RUNTIME_NAME}/"
           cp -r scripts "${RUNTIME_NAME}/"
           cp -r docs "${RUNTIME_NAME}/"
 
@@ -184,6 +185,7 @@ jobs:
             Includes:
             - docker-compose.yml
             - .env.docker.example
+            - license/
             - scripts/
             - docs/
             - VERSION
