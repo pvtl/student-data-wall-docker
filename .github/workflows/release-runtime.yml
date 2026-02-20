@@ -176,18 +176,26 @@ jobs:
           files: ${{ env.PACKAGE_FILE }}
           fail_on_unmatched_files: true
           body: |
-            Runtime package for Student Data Wall.
+            The next version of Student Data Wall is now available!
+
+            ## Installing
+            ```bash
+            wget https://github.com/pvtl/student-data-wall-docker/releases/download/${{ env.RUNTIME_VERSION }}/docker-runtime-${{ env.RUNTIME_VERSION }}.tar.gz
+            tar -xzf docker-runtime-${{ env.RUNTIME_VERSION }}.tar.gz
+            cd docker-runtime
+            ./scripts/sdw install
+            ```
+
+            ## Updating
+            ```bash
+            cd docker-runtime
+            ./scripts/sdw update
+            ```
+
+            ## Release Details
 
             - Runtime version: `${{ env.RUNTIME_VERSION }}`
             - App image: `${{ env.APP_IMAGE }}`
             - Trigger source: `${{ env.TRIGGER_SOURCE }}`
-
-            Includes:
-            - docker-compose.yml
-            - .env.docker.example
-            - license/
-            - scripts/
-            - docs/
-            - VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
