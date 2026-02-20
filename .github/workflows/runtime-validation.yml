@@ -35,9 +35,20 @@ jobs:
           set -euo pipefail
           version="$(tr -d '[:space:]' < VERSION)"
           image="$(awk -F= '$1=="APP_IMAGE"{print substr($0, index($0, "=")+1)}' .env.docker.example)"
+          runtime_version="$(awk -F= '$1=="RUNTIME_VERSION"{print substr($0, index($0, "=")+1)}' .env.docker.example)"
 
           if [[ "${image}" == *":latest"* ]]; then
             echo "APP_IMAGE must not use latest."
+            exit 1
+          fi
+
+          if [[ -z "${runtime_version}" ]]; then
+            echo "RUNTIME_VERSION must be set in .env.docker.example."
+            exit 1
+          fi
+
+          if [[ "${runtime_version}" != "${version}" ]]; then
+            echo "RUNTIME_VERSION ${runtime_version} does not match VERSION ${version}."
             exit 1
           fi
 

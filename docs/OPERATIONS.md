@@ -60,6 +60,7 @@ Displays runtime version, configured image reference, container status, migratio
 
 ## Version and Pinning Rules
 
-- Runtime repo tag must match image release tag (`vX.Y.Z`).
+- Runtime tag, `VERSION`, and `.env.docker.example` `RUNTIME_VERSION` must match.
+- `APP_IMAGE` may stay unchanged across multiple runtime releases when packaging/scripts are updated.
 - Do not use `latest` in production runtime config.
 - Prefer immutable digest pinning for `APP_IMAGE`.

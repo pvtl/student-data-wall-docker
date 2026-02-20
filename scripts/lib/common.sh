@@ -31,6 +31,70 @@ ensure_env_file() {
     cp "${ENV_EXAMPLE_FILE}" "${ENV_FILE}"
     echo "Created ${ENV_FILE} from template."
   fi
+
+  ensure_required_env_key "APP_IMAGE"
+  normalize_app_image_tag
+}
+
+ensure_required_env_key() {
+  local key="$1"
+  local current_value default_value tmp_env_file
+
+  current_value="$(read_env_value "${key}" "${ENV_FILE}" || true)"
+  if [[ -n "${current_value}" ]]; then
+    return 0
+  fi
+
+  default_value="$(read_env_value "${key}" "${ENV_EXAMPLE_FILE}" || true)"
+  if [[ -z "${default_value}" ]]; then
+    echo "Missing required env key ${key} in ${ENV_FILE} and no default in ${ENV_EXAMPLE_FILE}." >&2
+    return 1
+  fi
+
+  tmp_env_file="$(mktemp)"
+  awk -F= -v k="${key}" -v v="${default_value}" '
+    BEGIN {updated = 0}
+    $1 == k {
+      print k "=" v
+      updated = 1
+      next
+    }
+    { print }
+    END {
+      if (!updated) {
+        print k "=" v
+      }
+    }
+  ' "${ENV_FILE}" > "${tmp_env_file}"
+  mv "${tmp_env_file}" "${ENV_FILE}"
+
+  echo "Set ${key} in .env.docker from template."
+}
+
+normalize_app_image_tag() {
+  local current_value normalized_value tmp_env_file
+
+  current_value="$(read_env_value "APP_IMAGE" "${ENV_FILE}" || true)"
+  if [[ -z "${current_value}" ]]; then
+    return 0
+  fi
+
+  normalized_value="$(printf '%s' "${current_value}" | sed -E 's#^(ghcr\.io/pvtl/student-data-wall-docker:)v([0-9].*)$#\1\2#')"
+  if [[ "${normalized_value}" == "${current_value}" ]]; then
+    return 0
+  fi
+
+  tmp_env_file="$(mktemp)"
+  awk -F= -v k="APP_IMAGE" -v v="${normalized_value}" '
+    $1 == k {
+      print k "=" v
+      next
+    }
+    { print }
+  ' "${ENV_FILE}" > "${tmp_env_file}"
+  mv "${tmp_env_file}" "${ENV_FILE}"
+
+  echo "Normalized APP_IMAGE tag format in .env.docker: ${normalized_value}"
 }
 
 ensure_data_dirs() {
@@ -53,7 +117,9 @@ read_env_value() {
 }
 
 compose() {
-  docker compose -f "${COMPOSE_FILE}" "$@"
+  local app_image
+  app_image="$(read_env_value "APP_IMAGE" "${ENV_FILE}" || true)"
+  APP_IMAGE="${app_image}" docker compose --env-file "${ENV_FILE}" -f "${COMPOSE_FILE}" "$@"
 }
 
 runtime_version() {

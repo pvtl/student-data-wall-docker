@@ -12,8 +12,11 @@ It contains:
 ## Release Model
 
 - Private app repo (`pvtl/student-data-wall`) builds and publishes container images.
-- Runtime repo (`pvtl/student-data-wall-docker`) defines how operators deploy those images.
-- Releases are synchronized by tag (`vX.Y.Z`) across both repositories.
+- Runtime repo (`pvtl/student-data-wall-docker`) receives that image reference and builds a downloadable runtime package release.
+- Runtime releases are created by one workflow (`release-runtime.yml`) that supports:
+  - automatic trigger from `repository_dispatch` (`runtime-image-published`)
+  - manual reruns via `workflow_dispatch` for packaging-only fixes
+- Runtime package versions can move forward even when `APP_IMAGE` stays the same.
 - Production paths must use pinned image references, not `latest`.
 
 ## Quick Start
