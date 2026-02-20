@@ -199,7 +199,7 @@ jobs:
             ## Updating
             ```bash
             cd docker-runtime
-            ./scripts/sdw update
+            ./scripts/sdw update --target ${{ env.RUNTIME_VERSION }}
             ```
 
             ## Release Details

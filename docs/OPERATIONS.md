@@ -34,7 +34,8 @@ Optional target context flag:
 ./scripts/sdw update --target v0.1.0
 ```
 
-This command expects the repository checkout to already match your intended release tag.
+When `--target` is provided, the script updates `.env.docker` to use
+`ghcr.io/pvtl/student-data-wall-docker:<target-without-v>` before pulling.
 
 ## Reset Runtime
 
