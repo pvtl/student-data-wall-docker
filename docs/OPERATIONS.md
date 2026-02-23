@@ -28,14 +28,18 @@ docker compose run --rm app php artisan key:generate --show
 ./scripts/sdw update
 ```
 
-Optional target context flag:
+By default, `update` resolves the latest runtime release tag from GitHub and updates
+`.env.docker` before pulling.
+
+Optional target flags:
 
 ```bash
 ./scripts/sdw update --target v0.1.0
+./scripts/sdw update --target latest
 ```
 
-When `--target` is provided, the script updates `.env.docker` to use
-`ghcr.io/pvtl/student-data-wall-docker:<target-without-v>` before pulling.
+When `--target` is provided (or resolved as latest), the script updates `.env.docker`
+to use `ghcr.io/pvtl/student-data-wall-docker:<target-without-v>` before pulling.
 
 ## Reset Runtime
 

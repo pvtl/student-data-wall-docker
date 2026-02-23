@@ -17,6 +17,14 @@ Commands:
 EOF
 }
 
+exit_with_usage_error() {
+  local message="$1"
+  echo "Error: ${message}" >&2
+  echo >&2
+  usage >&2
+  exit 1
+}
+
 main() {
   local cmd="${1:-}"
   shift || true
@@ -38,9 +46,7 @@ main() {
       usage
       ;;
     *)
-      echo "Unknown command: ${cmd}" >&2
-      usage
-      exit 1
+      exit_with_usage_error "Unknown command: ${cmd}"
       ;;
   esac
 }

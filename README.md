@@ -39,7 +39,7 @@ Use the wrapper:
 Supported commands:
 
 - `install`: First-time setup on a host.
-- `update`: Pull latest pinned image and apply runtime updates.
+- `update`: Resolve latest runtime release (or use `--target`) and apply updates.
 - `reset`: Stop and recreate runtime state with optional backups.
 - `status`: Print deployment/runtime health and diagnostics.
 

@@ -6,7 +6,41 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/lib/common.sh
 source "${SCRIPT_DIR}/lib/common.sh"
 
+usage() {
+  cat <<'EOF'
+Usage:
+  ./scripts/sdw status [--help]
+
+Options:
+  -h, --help   Show this help message.
+EOF
+}
+
+exit_with_usage_error() {
+  local message="$1"
+  echo "Error: ${message}" >&2
+  echo >&2
+  usage >&2
+  exit 1
+}
+
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h|--help|help)
+        usage
+        exit 0
+        ;;
+      *)
+        exit_with_usage_error "Unknown option: $1"
+        ;;
+    esac
+  done
+}
+
 main() {
+  parse_args "$@"
+
   ensure_env_file
   local image_ref
   image_ref="$(read_env_value APP_IMAGE "${ENV_FILE}")"

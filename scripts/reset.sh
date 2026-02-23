@@ -8,15 +8,37 @@ source "${SCRIPT_DIR}/lib/common.sh"
 
 NO_BACKUP="false"
 
+usage() {
+  cat <<'EOF'
+Usage:
+  ./scripts/sdw reset [--no-backup] [--help]
+
+Options:
+  --no-backup   Skip creating a backup before resetting runtime data.
+  -h, --help    Show this help message.
+EOF
+}
+
+exit_with_usage_error() {
+  local message="$1"
+  echo "Error: ${message}" >&2
+  echo >&2
+  usage >&2
+  exit 1
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --no-backup)
       NO_BACKUP="true"
       shift
       ;;
+    -h|--help|help)
+      usage
+      exit 0
+      ;;
     *)
-      echo "Unknown option: $1" >&2
-      exit 1
+      exit_with_usage_error "Unknown option: $1"
       ;;
   esac
 done
