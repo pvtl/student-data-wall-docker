@@ -6,7 +6,7 @@ services:
     ports:
       - "${APP_PORT:-80}:80"
     volumes:
-      - ./data/database/database.sqlite:/var/www/html/database/database.sqlite
+      - ./data/database:/var/www/html/storage/app/database
       - ./data/storage_private:/var/www/html/storage/app/private
       - ./data/storage_public:/var/www/html/storage/app/public
       - ./license/license.lic:/var/www/html/license.lic:ro
