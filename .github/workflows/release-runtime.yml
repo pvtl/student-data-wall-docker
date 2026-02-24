@@ -193,6 +193,7 @@ jobs:
             wget https://github.com/pvtl/student-data-wall-docker/releases/download/${{ env.RUNTIME_VERSION }}/docker-runtime-${{ env.RUNTIME_VERSION }}.tar.gz
             tar -xzf docker-runtime-${{ env.RUNTIME_VERSION }}.tar.gz
             cd docker-runtime
+            # Copy your license file to "license/license.lic"
             ./scripts/sdw install
             ```
 
